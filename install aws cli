@@ -1,0 +1,103 @@
+Here bro — the **exact steps to install the AWS CLI on your EC2 server (Linux / Ubuntu / Amazon Linux)**.
+
+This is the correct and safe method approved by AWS.
+
+---
+
+# ✅ **STEP 1 — Update your server**
+
+Run this first:
+
+```
+sudo apt update -y
+```
+
+(If you are using Amazon Linux, use `sudo yum update -y`)
+
+---
+
+# ✅ **STEP 2 — Download AWS CLI v2**
+
+Run:
+
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+```
+
+---
+
+# ✅ **STEP 3 — Unzip**
+
+```
+sudo apt install unzip -y
+unzip awscliv2.zip
+```
+
+---
+
+# ✅ **STEP 4 — Install AWS CLI**
+
+```
+sudo ./aws/install
+```
+
+---
+
+# ✅ **STEP 5 — Verify Installation**
+
+```
+aws --version
+```
+
+You should see something like:
+
+```
+aws-cli/2.x.x Python/3.x Linux/x86_64
+```
+
+---
+
+# 🟦 VERY IMPORTANT REMINDER
+
+You should **NOT** run `aws configure` on the server.
+
+Because your EC2 instance will use **IAM Role** (not access keys).
+
+---
+
+# 🔥 **HOW TO TEST IAM ROLE**
+
+After installing AWS CLI, test like this:
+
+```
+aws sts get-caller-identity
+```
+
+You should see something like:
+
+```
+"Arn": "arn:aws:sts::123456789012:assumed-role/project-ec2-s3-role/i-0abc12345",
+```
+
+This confirms:
+
+✔ IAM Role is attached
+✔ No need to login
+✔ No access keys needed
+
+Then you can test S3:
+
+```
+aws s3 ls s3://teamhub-images
+```
+
+---
+
+# 🟩 If you need, I can give:
+
+✔ Step-by-step: attach IAM role to EC2
+✔ Full IAM policies
+✔ Test commands
+✔ How developers use S3
+
+Just tell me.
