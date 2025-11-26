@@ -1,0 +1,164 @@
+Here bro — **100% clear, exact, step-by-step AWS Console instructions** to create:
+
+✔ Two IAM Policies
+✔ One IAM Role
+✔ Attach both policies to the role
+✔ Attach the role to your EC2
+
+Follow exactly these steps.
+
+---
+
+# ✅ **STEP 1 — Create IAM Policy for Images Bucket**
+
+### 1️⃣ Go to AWS Console → IAM
+
+### 2️⃣ Left side → Policies
+
+### 3️⃣ Click **Create policy**
+
+### 4️⃣ Select **JSON** tab
+
+### 5️⃣ Paste this:
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::projectname-prod-images/*"
+    }
+  ]
+}
+```
+
+### 6️⃣ Click **Next** → Next →
+
+### 7️⃣ Give name: **project-s3-images-policy**
+
+### 8️⃣ Click **Create policy**
+
+---
+
+# ✅ **STEP 2 — Create IAM Policy for Payslips Bucket**
+
+### 1️⃣ IAM → Policies → Create policy
+
+### 2️⃣ Select **JSON**
+
+### 3️⃣ Paste this:
+
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::projectname-prod-payslips/*"
+    }
+  ]
+}
+```
+
+⚠️ No Delete permission.
+
+### 4️⃣ Next → Next
+
+### 5️⃣ Name: **project-s3-payslips-policy**
+
+### 6️⃣ Create policy
+
+---
+
+# ✅ **STEP 3 — Create IAM Role for EC2**
+
+### 1️⃣ Go to IAM → Roles
+
+### 2️⃣ Click **Create role**
+
+### 3️⃣ Select **Trusted entity: AWS service**
+
+### 4️⃣ Select **Use case: EC2**
+
+### 5️⃣ Click **Next**
+
+### 6️⃣ Attach policies:
+
+* project-s3-images-policy
+* project-s3-payslips-policy
+
+👇 (Search them and tick both)
+
+### 7️⃣ Click **Next**
+
+### 8️⃣ Role name: **project-ec2-s3-role**
+
+### 9️⃣ Create role
+
+---
+
+# ✅ **STEP 4 — Attach IAM Role to EC2 Instance**
+
+### 1️⃣ Go to EC2 Dashboard
+
+### 2️⃣ Click **Instances**
+
+### 3️⃣ Select your backend EC2 instance
+
+### 4️⃣ Click **Actions**
+
+### 5️⃣ Select:
+
+**Security → Modify IAM Role**
+
+### 6️⃣ Choose:
+
+**project-ec2-s3-role**
+
+### 7️⃣ Click **Update IAM role**
+
+🎉 Now your EC2 has permissions to access both S3 buckets securely.
+
+---
+
+# 🎯 **STEP 5 — What You Give to Developers**
+
+Only these:
+
+```
+AWS_REGION=ap-south-1
+S3_BUCKET_IMAGES=projectname-prod-images
+S3_BUCKET_PAYSLIPS=projectname-prod-payslips
+```
+
+They don’t need:
+
+❌ Access key
+❌ Secret key
+❌ Anything sensitive
+
+EC2 IAM Role handles authentication automatically.
+
+---
+
+# 🟦 If you want
+
+I can also give:
+
+✔ FULL bucket policy (optional)
+✔ KMS encryption setup for payslips
+✔ Folder structure inside S3
+✔ Developer documentation PDF
+✔ Code examples (Node, Java, Python, .NET)
+
+Just tell me 👌
