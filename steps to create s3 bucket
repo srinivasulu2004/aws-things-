@@ -1,0 +1,177 @@
+Absolutely bro — here are **100% exact, clean, step-by-step AWS Console instructions** to create your two S3 buckets:
+
+---
+
+# 🟦 **BUCKET 1 → `teamhub-images`**
+
+# 🟥 **BUCKET 2 → `teamhub-payslips`** (Highly secure)
+
+Follow these steps **one by one**.
+
+---
+
+# ✅ **STEP 1 — Go to S3 Console**
+
+1. Login to AWS
+2. Search → **S3**
+3. Click **Create bucket**
+
+---
+
+# ✅ **STEP 2 — Create Images Bucket (`teamhub-images`)**
+
+### 1️⃣ **Bucket name**
+
+```
+teamhub-images
+```
+
+### 2️⃣ **AWS Region**
+
+Choose:
+
+```
+Asia Pacific (Mumbai) - ap-south-1
+```
+
+### 3️⃣ **Block Public Access**
+
+✔ Keep **ALL 4 ON**
+(DO NOT allow public access)
+
+### 4️⃣ **Bucket Versioning**
+
+Optional (can enable)
+
+### 5️⃣ **Encryption**
+
+* Select: **Amazon S3 managed keys (SSE-S3)**
+  (This is fine for normal images)
+
+### 6️⃣ **Advanced settings**
+
+Keep default.
+
+### 7️⃣ Scroll → Click **Create bucket**
+
+🎉 **Your images bucket is created.**
+
+---
+
+# 🟥 NOW CREATE THE PAYSLIPS BUCKET
+
+(IMPORTANT: Follow security steps strictly)
+
+---
+
+# ✅ **STEP 3 — Create Payslips Bucket (`teamhud-payslips`)**
+
+Again click → **Create bucket**
+
+### 1️⃣ **Bucket name**
+
+```
+teamhud-payslips
+```
+
+### 2️⃣ **AWS Region**
+
+```
+ap-south-1
+```
+
+### 3️⃣ **Block Public Access**
+
+✔ Keep **ALL 4 ON**
+(No public access — critical)
+
+### 4️⃣ **Bucket Versioning**
+
+Turn ON
+✔ **Enable**
+
+(Needed for auditing / compliance)
+
+### 5️⃣ **Encryption**
+
+Choose:
+✔ **AWS Key Management Service key (SSE-KMS)**
+✔ Choose → **aws/s3** (default KMS key)
+
+(If you want, I can create custom KMS key too)
+
+### 6️⃣ **Bucket-level Public Settings**
+
+Keep everything default.
+
+### 7️⃣ Click **Create bucket**
+
+🎉 **Your secure payslips bucket is created.**
+
+---
+
+# 🔒 **STEP 4 — Apply Additional Security (Required for Payslips)**
+
+After creating `teamhud-payslips`:
+
+### Go inside bucket → **Properties**
+
+Scroll to:
+
+### **Object Ownership**
+
+✔ ACLs disabled
+✔ Bucket owner enforced
+
+### **Default encryption**
+
+✔ SSE-KMS (aws/s3)
+
+### **Versioning**
+
+✔ Enabled
+
+---
+
+# 🔥 Final Check
+
+### Images Bucket → `teamhub-images`
+
+* Encryption: SSE-S3
+* Versioning: Optional
+* Public access: Block all
+* ACL: Disabled
+
+### Payslips Bucket → `teamhud-payslips`
+
+* Encryption: **SSE-KMS**
+* Versioning: **Enabled**
+* Public access: Block all
+* ACL: Disabled
+* No static hosting
+
+This is **industry-standard** setup.
+
+---
+
+# 🎉 All Buckets Created Successfully
+
+Next step (already asked by you earlier):
+
+👉 Create **two IAM policies**
+👉 Create **one EC2 IAM Role**
+👉 Attach policies to the role
+👉 Attach role to EC2 instance
+
+I already sent those steps, but if you want I can send them again with screenshots-style clarity.
+
+---
+
+# If you want, I can also generate:
+
+✅ Full bucket policy
+✅ Folder structure
+✅ Developer documentation
+✅ Code samples for uploading files
+
+Just tell me 👌
