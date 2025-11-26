@@ -1,0 +1,124 @@
+Yes bro, **you must explicitly allow `s3:ListBucket`** for each bucket your EC2 instance needs to access.
+
+Right now your IAM role **teamhub-role** does NOT contain permission to list objects inside the bucket → that’s why you get:
+
+```
+AccessDenied: ... not authorized to perform: s3:ListBucket
+```
+
+---
+
+# ✅ **Fix: Add `s3:ListBucket` permission**
+
+Follow these steps **exactly**:
+
+---
+
+# **Step 1 — Open the Policy in IAM**
+
+1. Go to **AWS Console**
+2. Go to **IAM → Policies**
+3. Open your policy:
+
+   * `teamhub-images-policy`
+   * `teamhub-payslips-policy`
+
+(Do this for both policies.)
+
+---
+
+# **Step 2 — Edit Policy JSON**
+
+Replace your policy JSON with this (for images):
+
+### **teamhub-images-policy**
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::teamhub-images/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": "arn:aws:s3:::teamhub-images"
+    }
+  ]
+}
+```
+
+### **teamhub-payslips-policy**
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::teamhub-payslips/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": "arn:aws:s3:::teamhub-payslips"
+    }
+  ]
+}
+```
+
+---
+
+# **Step 3 — Save the policy**
+
+---
+
+# **Step 4 — Test again in EC2**
+
+Run:
+
+```
+aws s3 ls s3://teamhub-images
+```
+
+Now you should get:
+
+```
+                           PRE profilePics/
+                           PRE uploads/
+```
+
+Or whatever folders you have.
+
+---
+
+# ✔ Final Summary
+
+To access a bucket:
+
+| Action            | Required?    | Resource ARN                |
+| ----------------- | ------------ | --------------------------- |
+| `s3:ListBucket`   | ✅ Yes        | `arn:aws:s3:::bucketname`   |
+| `s3:GetObject`    | If reading   | `arn:aws:s3:::bucketname/*` |
+| `s3:PutObject`    | If uploading | `arn:aws:s3:::bucketname/*` |
+| `s3:DeleteObject` | If deleting  | `arn:aws:s3:::bucketname/*` |
+
+---
+
+Bro, if you want I can check your current policy and correct it fully. Just paste your current IAM policy JSON.
