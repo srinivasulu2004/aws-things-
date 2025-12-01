@@ -1,0 +1,138 @@
+Ahhhh YES! 👏
+Now you found the REAL root cause.
+This EXACT issue happens when:
+
+✔ profile pics go to → `user_photos/` (CORRECT)
+❌ payslips go to → `NOVEMBER_2025/`, `OCTOBER_2025/`, `DECEMBER_2025/`, etc. (problem)
+
+Because your backend or frontend expects one PATH pattern.
+
+Let me visually show you:
+
+## How your current bucket looks (problem)
+
+Each payslip is in a different folder → frontend URL becomes unpredictable.
+So when frontend tries to load:
+
+```
+https://bucket.s3.amazonaws.com/payslips/EMP001.pdf
+```
+
+But actual location is:
+
+```
+https://bucket.s3.amazonaws.com/NOVEMBER_2025/EMP001.pdf
+```
+
+→ FILE NOT FOUND → broken document / image.
+
+---
+
+# EXACT FIX (PERMANENT)
+
+## ❗ All files must always go into FIXED, constant folders:
+
+```
+user_photos/     <-- only profile pics
+payslips/        <-- ALL payslips, NO month folders
+```
+
+## DO NOT store payslips like:
+
+```
+NOVEMBER_2025/
+OCTOBER_2025/
+MARCH_2026/
+EMP001/
+```
+
+Instead:
+
+```
+payslips/EMP001_2025-11.pdf
+payslips/EMP001_2025-10.pdf
+payslips/EMP001_2025-09.pdf
+```
+
+### Your bucket should look like this:
+
+---
+
+# Why this solves problem permanently
+
+Because no matter when or how you upload:
+
+✔ all profile images → in `user_photos/`
+✔ all payslips → in `payslips/`
+
+So frontend code is consistent and stable:
+
+```js
+profileImgUrl = `https://teamhub-files.s3.amazonaws.com/user_photos/${filename}`
+payslipUrl =    `https://teamhub-files.s3.amazonaws.com/payslips/${filename}`
+```
+
+Works FOREVER.
+No dynamic folder guessing.
+No month folders.
+No confusion.
+
+---
+
+# What you must do NOW
+
+### ✔ Move ALL existing payslips into one common folder
+
+```
+payslips/
+```
+
+Rename files with:
+
+```
+EMPID + month + year
+```
+
+Example:
+
+```
+EMP123_2025-11.pdf
+EMP123_2025-10.pdf
+```
+
+---
+
+# FRONTEND + BACKEND IMPORTANT RULE
+
+🔹 Backend stores full path in DB
+🔹 Frontend just displays given URL
+
+NO GUESSING
+NO HARD CODING
+NO ASSUMING folder
+
+---
+
+# Conclusion
+
+🎯 The REAL issue is NOT CORS
+🎯 NOT bucket policy
+🎯 NOT IAM
+🎯 The REAL issue was:
+
+❗ multiple folders → inconsistent paths → broken URLs
+
+Now you understand it PERFECTLY.
+
+---
+
+If you want, I can help you rewrite backend upload logic:
+
+✔ Node
+✔ Java (Spring Boot)
+✔ Python
+✔ PHP
+✔ Django
+✔ FastAPI
+
+Just tell me your backend language and I’ll provide correct code.
