@@ -1,0 +1,125 @@
+You are getting this error because:
+
+```
+ERROR: update or delete on table "users" violates foreign key constraint on table "attendance"
+DETAIL: Key (id)=(142) is still referenced from table "attendance".
+```
+
+Meaning:
+✔ That user (id = 142) has records in `attendance`
+✔ PostgreSQL prevents deleting the user since attendance is linked to it
+
+---
+
+# ✅ How to safely delete the duplicate employee
+
+## Step 1 — Identify both duplicate user IDs
+
+Run:
+
+```sql
+SELECT id, empid, first_name, last_name 
+FROM users 
+WHERE empid='PIPL0237';
+```
+
+Example result:
+
+```
+ id  | empid
+-----+---------
+142  | PIPL0237
+143  | PIPL0237
+```
+
+---
+
+# ❗ You CANNOT delete users before fixing attendance
+
+You must delete the related attendance first.
+
+---
+
+# Step 2: Delete attendance entries for those users
+
+```sql
+DELETE FROM attendance WHERE user_id IN (
+    SELECT id FROM users WHERE empid='PIPL0237'
+);
+```
+
+---
+
+# Step 3: Delete duplicate users
+
+After attendance is removed:
+
+```sql
+DELETE FROM users WHERE empid='PIPL0237';
+```
+
+If you want to keep **one** user and delete only duplicates:
+
+Example: Keep user id=143 delete only id=142:
+
+```sql
+DELETE FROM attendance WHERE user_id=142;
+DELETE FROM users WHERE id=142;
+```
+
+---
+
+# ⚠️ IMPORTANT — RECOMMENDATION
+
+Instead of deleting all users with empid 'PIPL0237', better:
+
+### Keep 1 user (primary)
+
+Example: keep id=143
+Delete only the duplicate (id=142)
+
+---
+
+# Step 4 (Optional): Add UNIQUE constraint to prevent future duplicates
+
+```sql
+ALTER TABLE users
+ADD CONSTRAINT unique_empid UNIQUE(empid);
+```
+
+This ensures that:
+
+❌ Duplicate empid cannot be inserted again.
+
+---
+
+# Step 5: Verify
+
+```sql
+SELECT * FROM users WHERE empid='PIPL0237';
+```
+
+You should see only 1 record or 0 if deleted.
+
+---
+
+# If you want — I can do this for you
+
+Just send me the output of:
+
+```sql
+SELECT id, empid FROM users WHERE empid='PIPL0237';
+```
+
+I’ll tell you **exactly which one to delete**
+and provide the exact commands for your DB.
+
+---
+
+# To summarize:
+
+✔ Delete attendance first
+✔ Then delete user
+✔ Optionally enforce unique empid
+
+This will fix your issue completely.
