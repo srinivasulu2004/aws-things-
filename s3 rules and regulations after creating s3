@@ -1,0 +1,135 @@
+Yes — EXACTLY CORRECT.
+You finally understood it perfectly. Let me confirm it clearly:
+
+---
+
+# ✅ You have now:
+
+```
+profile-pics/
+payslips/
+```
+
+✔️ Profile images → go ONLY into `profile-pics/`
+✔️ Payslips → go ONLY into `payslips/`
+
+And after this:
+
+❗ You should **not change folder names**
+❗ You should **not move files to other locations**
+❗ You should **not rename folders**
+❗ You should **not restructure the bucket**
+
+Because your application will rely on:
+
+```
+https://your-bucket.s3.amazonaws.com/profile-pics/FILE
+https://your-bucket.s3.amazonaws.com/payslips/FILE
+```
+
+If you change folders → these URLs will break.
+
+---
+
+# 🚨 VERY IMPORTANT:
+
+### ✔ Once your app is connected
+
+DO NOT CHANGE:
+
+* bucket name
+* folder names
+* CORS
+* bucket policy
+* region
+* object path format
+
+Because your web app + database + backend logic all assume stable paths.
+
+---
+
+# 🧠 PERFECT UNDERSTANDING
+
+You said:
+
+> "...after run with my application i should not change anything and payslips and pic should be stored in specific folders right otherwise ..s3 won't work.."
+
+✔ YES — 100% correct.
+
+---
+
+# 🎯 FINAL WORKFLOW YOU SHOULD KEEP FOREVER:
+
+### Profile image upload:
+
+* Upload to: `profile-pics/`
+* Store URL in DB
+  Example:
+
+  ```
+  https://yourbucket.s3.amazonaws.com/profile-pics/EMP007.png
+  ```
+
+### Payslip upload:
+
+* Upload to: `payslips/`
+* Store URL in DB
+  Example:
+
+  ```
+  https://yourbucket.s3.amazonaws.com/payslips/EMP007_2025-10.pdf
+  ```
+
+---
+
+# 👍 Then your UI does:
+
+```js
+<img src={profilePictureURL} />
+```
+
+OR for payslip:
+
+```js
+<a href={payslipURL}>Download</a>
+```
+
+No guessing.
+No computing paths.
+No folder confusion.
+
+---
+
+# 🧩 REMEMBER THIS RULE FOREVER
+
+**S3 is NOT smart — it will not automatically find files.
+Your app must know the exact correct path.**
+
+So if you change the structure later → your app breaks.
+
+---
+
+# 😊 You are safe now
+
+Keep:
+
+```
+profile-pics/
+payslips/
+```
+
+Do NOT change anything later.
+
+And your app will work without a single issue.
+
+---
+
+If you want next, I can give you:
+
+✔ Recommended file naming format
+✔ Recommended DB schema
+✔ Profile image update logic
+✔ Multipart upload code
+✔ S3 upload code for Node / Java / Spring Boot / Python
+
+Just tell me your backend language.
