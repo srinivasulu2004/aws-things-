@@ -1,0 +1,200 @@
+Here are the **exact, practical steps to set up environments in Jenkins**, in the simplest and clearest way possible — especially for your use case of choosing branch based on environment.
+
+---
+
+# ✅ Step 1 — Open Jenkins and select your pipeline job
+
+* Go to Jenkins Dashboard
+* Click your pipeline project (example: `multi-env-deploy`)
+
+---
+
+# ✅ Step 2 — Enable “Build With Parameters”
+
+### Go to:
+
+```
+Configure → General Tab
+```
+
+✔ Enable this option:
+
+```
+This project is parameterized
+```
+
+---
+
+# ✅ Step 3 — Create an ENVIRONMENT parameter
+
+After checking "This project is parameterized":
+
+Click:
+
+```
+Add Parameter → Choice Parameter
+```
+
+Enter:
+
+* **Name:** `ENVIRONMENT`
+* **Choices (each line):**
+
+```
+dev
+qa
+prod
+```
+
+* **Description:**
+
+```
+Select environment
+```
+
+This creates a UI dropdown for the environment.
+
+---
+
+# ✅ Step 4 — Add parameter logic inside pipeline
+
+Your Jenkinsfile must include:
+
+```groovy
+parameters {
+    choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'prod'], description: 'Select environment to deploy')
+}
+```
+
+---
+
+# ✅ Step 5 — Set Environment → Branch mapping
+
+Inside Jenkinsfile:
+
+```groovy
+environment {
+    BRANCH_NAME = "${params.ENVIRONMENT == 'prod' ? 'master' : params.ENVIRONMENT}"
+}
+```
+
+This ensures:
+
+* dev → dev branch
+* qa → qa branch
+* prod → master branch
+
+---
+
+# ✅ Step 6 — Use that branch in clone step
+
+```groovy
+git branch: "${BRANCH_NAME}", credentialsId: 'github', url: 'https://github.com/...git'
+```
+
+---
+
+# ✅ Step 7 — Test it
+
+Click:
+
+```
+Build with Parameters
+```
+
+You will see:
+
+```
+ENVIRONMENT:  [ dev | qa | prod ]
+```
+
+Try a build with:
+
+* dev → should clone `dev`
+* qa → should clone `qa`
+* prod → should clone `master`
+
+---
+
+# OPTIONAL: ENV per stage
+
+### If you later want:
+
+| ENV  | deploy to server |
+| ---- | ---------------- |
+| dev  | EC2 #1           |
+| qa   | EC2 #2           |
+| prod | EC2 #3           |
+
+You can do:
+
+```groovy
+environment {
+    SERVER_IP = "${params.ENVIRONMENT == 'prod' ? '10.0.2.11' : params.ENVIRONMENT == 'qa' ? '10.0.1.11' : '10.0.0.11'}"
+}
+```
+
+Then:
+
+```groovy
+sh "ssh ubuntu@${SERVER_IP} docker compose up -d"
+```
+
+---
+
+# OPTIONAL: different environment variables in container
+
+You can set:
+
+```yaml
+environment:
+  - SPRING_PROFILE=${ENVIRONMENT}
+```
+
+or in Jenkinsfile:
+
+```groovy
+sh "export SPRING_PROFILE=${params.ENVIRONMENT}"
+```
+
+---
+
+# OPTIONAL: deploy on different ports
+
+Example:
+
+| ENV  | Port |
+| ---- | ---- |
+| dev  | 3000 |
+| qa   | 4000 |
+| prod | 80   |
+
+```groovy
+environment {
+    APP_PORT = "${params.ENVIRONMENT == 'prod' ? '80' : params.ENVIRONMENT == 'qa' ? '4000' : '3000'}"
+}
+```
+
+---
+
+# ✔️ Summary
+
+### To set up environment in Jenkins:
+
+✔ Enable “This project is parameterized”
+✔ Add `ENVIRONMENT` as Choice parameter
+✔ Use it inside Jenkinsfile
+✔ Dynamically clone corresponding branch
+✔ Deploy accordingly
+
+---
+
+If you want, I can now help you do:
+
+✔ different `.env` files for frontend & backend
+✔ different AWS credentials per environment
+✔ different DB connection per env
+✔ different S3 buckets per env
+✔ different domain URLs per env
+
+Just tell me your exact requirement & I’ll build you the full solution.
