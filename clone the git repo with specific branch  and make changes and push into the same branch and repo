@@ -1,0 +1,134 @@
+Got it — you want the steps **from scratch**, starting as if NOTHING is on your local machine, only code in the remote GitHub repo under branch `dev`.
+
+Here are the exact steps:
+
+---
+
+# ✅ FULL PROCESS FROM ZERO (starting fresh)
+
+### 1️⃣ Clone the repo from GitHub
+
+```
+git clone <your-repo-url>
+```
+
+Example:
+
+```
+git clone git@github.com:company/project.git
+```
+
+---
+
+### 2️⃣ Go inside the project
+
+```
+cd project
+```
+
+---
+
+### 3️⃣ Switch to the dev branch
+
+```
+git checkout dev
+```
+
+If the branch doesn’t exist locally yet:
+
+```
+git fetch
+git checkout dev
+```
+
+---
+
+### 4️⃣ Pull the latest code from remote dev
+
+```
+git pull origin dev
+```
+
+---
+
+### 5️⃣ Make your changes
+
+(Edit the files in VSCode / IntelliJ / etc)
+
+---
+
+### 6️⃣ Check modified files
+
+```
+git status
+```
+
+---
+
+### 7️⃣ Add your changed files
+
+```
+git add .
+```
+
+---
+
+### 8️⃣ Commit your changes
+
+```
+git commit -m "Your change message"
+```
+
+---
+
+### 9️⃣ Push back to the same branch (dev)
+
+```
+git push origin dev
+```
+
+---
+
+# ✔️ Finished!
+
+Your updated code is now in the dev branch on GitHub.
+
+---
+
+# 🧠 Example workflow (practically)
+
+```
+git clone https://github.com/priacc-innovations/version-2.git
+cd version-2
+git checkout dev
+git pull origin dev
+
+--- make changes in code ---
+
+git add .
+git commit -m "fixed login bug in dev"
+git push origin dev
+```
+
+---
+
+# 🔥 Common mistakes to avoid
+
+❌ editing files before pulling latest
+❌ committing on `main` by accident
+❌ pushing uncommitted changes
+❌ accidentally `git push origin main`
+
+---
+
+# 👍 If you want extra:
+
+I can also provide:
+
+✔ how to create a new branch from dev
+✔ how to resolve merge conflicts
+✔ how to undo a local commit
+✔ how to reset dev branch
+✔ how to force push safely
+
+Just tell me 😎
