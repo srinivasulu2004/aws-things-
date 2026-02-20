@@ -1,0 +1,105 @@
+Yes ✅ — for **temporary development**, your approach is fine.
+
+Since you don’t have a domain right now, you can use:
+
+### ✅ Temporary CORS (Development Only)
+
+```json
+[
+  {
+    "AllowedOrigins": ["*"],
+    "AllowedMethods": ["GET", "PUT", "POST", "DELETE"],
+    "AllowedHeaders": ["*"]
+  }
+]
+```
+
+This will allow:
+
+* Upload profile picture
+* Update profile picture
+* Delete profile picture
+* Download files
+
+From anywhere (including localhost).
+
+---
+
+# ⚠️ But Very Important
+
+Because you are storing:
+
+* Payslips (sensitive data)
+* Profile pictures
+
+Make sure:
+
+### 1️⃣ Bucket Public Access is BLOCKED
+
+Go to:
+
+S3 → teamhub-storage-new → Permissions
+✔ Block all public access → ON
+
+CORS ≠ Public access.
+
+CORS only allows browser communication.
+It does NOT make your bucket public.
+
+---
+
+# 🔥 When You Get Domain (Production Setup)
+
+Then change to:
+
+```json
+[
+  {
+    "AllowedOrigins": ["https://your-domain.com"],
+    "AllowedMethods": ["GET", "PUT", "POST", "DELETE"],
+    "AllowedHeaders": ["*"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3000
+  }
+]
+```
+
+This is correct production configuration 👍
+
+---
+
+# 🧠 One More Important Thing
+
+If you are uploading **directly from frontend**, the best secure way is:
+
+👉 Backend generates **Pre-signed URL**
+👉 Frontend uploads using that URL
+👉 Bucket stays private
+👉 No public IAM policy
+
+That is production standard.
+
+---
+
+# 🎯 Final Answer
+
+Yes ✅
+Your plan is correct:
+
+* Now → `"*"` for testing
+* Later → restrict to your domain
+
+Just ensure:
+
+* Bucket is private
+* No public bucket policy
+* IAM role controls access
+
+---
+
+If you want, I can next:
+
+* Give you sample pre-signed URL backend code
+* Or review your full Attendance Portal S3 security design
+
+Tell me 👍
